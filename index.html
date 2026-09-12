@@ -407,7 +407,7 @@
 
     .pill-badge {
       display: inline-block;
-      background: linear-gradient(135deg, var(--accent), #ff0055);
+      background: linear-gradient(135deg, #00ccff, #6666ff);
       color: #fff;
       font-family: var(--font-display);
       font-size: 0.85rem;
@@ -1524,7 +1524,7 @@
         `;
 
         triggerHookStickersPop();
-        playVoiceInstant('audio_intro', 150);
+        playVoiceInstant('audio_intro', 100);
       });
     }
 
@@ -1625,9 +1625,9 @@
         }
 
         // Despixelado suave
-        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.92));
+        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.85));
         renderPixelatedCanvas(currentBlocks);
-      }, 40);
+      }, 77);
 
       // Temblor de urgencia progresivo (segundos 3, 4 y 5)
       urgencyShakeTimers.push(setTimeout(() => {
