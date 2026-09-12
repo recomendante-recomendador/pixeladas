@@ -1609,7 +1609,7 @@
       // El pixelado final ahora escala junto con el inicial: cuanto más alto
       // el pixelado de arranque, más pixelado se queda incluso justo antes de revelar,
       // en vez de converger siempre en el mismo techo fijo (76).
-      const preRevealBlocks = Math.round(initialBlocks * 2.4 + 18);
+      const preRevealBlocks = Math.round(initialBlocks * 3.2 + 18);
 
       countdownInterval = setInterval(() => {
         const elapsed = Date.now() - countdownStart;
@@ -1627,7 +1627,7 @@
         // Despixelado suave
         const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.75));
         renderPixelatedCanvas(currentBlocks);
-      }, 150);
+      }, 120);
 
       // Temblor de urgencia progresivo (segundos 3, 4 y 5)
       urgencyShakeTimers.push(setTimeout(() => {
