@@ -1625,7 +1625,7 @@
         }
 
         // Despixelado suave
-        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.90));
+        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.65));
         renderPixelatedCanvas(currentBlocks);
       }, 110);
 
