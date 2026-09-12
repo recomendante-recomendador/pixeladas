@@ -1625,9 +1625,9 @@
         }
 
         // Despixelado suave
-        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.85));
+        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.90));
         renderPixelatedCanvas(currentBlocks);
-      }, 77);
+      }, 110);
 
       // Temblor de urgencia progresivo (segundos 3, 4 y 5)
       urgencyShakeTimers.push(setTimeout(() => {
