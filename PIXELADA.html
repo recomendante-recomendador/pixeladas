@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Pixel Guess Studio Pro: Adivina el Logo / Personaje (9:16)</title>
+
+  <!-- Tipografías Virales -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;0,900;1,900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0d0f17;
+      --panel-bg: #161822;
+      --card-white: rgba(255, 255, 255, 0.98);
+      --primary: #00F0FF;
+      --accent: #FF007F;
+      --gold: #FFC400;
+      --correct: #00E676;
+      --wrong: #FF1744;
+      --text-dark: #0f172a;
+      --text-muted: #8F9CAE;
+      --font-display: 'Montserrat', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #fff;
+      font-family: var(--font-body);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    input, textarea, select, button {
+      font-family: inherit;
+    }
+
+    /* HEADER & SETUP */
+    .setup-container {
+      padding: 14px 14px 90px 14px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #282c3f;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-lib { background: #2b3044; color: #fff; }
+    .btn-save { background: var(--primary); color: #000; font-weight: 800; }
+
+    .card-setup {
+      background: var(--panel-bg);
+      border: 1px solid #282d3f;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-setup-title {
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      background: #0d0f17;
+      border: 1px solid #272d42;
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #fff;
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+      user-select: text;
+    }
+
+    /* FILA DE CONTROL DE PIXELEADO (SLIDER + INPUT) */
+    .pixel-control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pixel-control-group input[type="range"] {
+      flex: 1;
+      accent-color: var(--primary);
+      cursor: pointer;
+      margin-bottom: 0;
+      height: 6px;
+    }
+
+    .pixel-val-box {
+      width: 64px;
+      min-width: 64px;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 6px 4px;
+      border-radius: 8px;
+      background: #0d0f17;
+      border: 1.5px solid #334155;
+      color: var(--primary);
+      margin-bottom: 0;
+      outline: none;
+    }
+    .pixel-val-box:focus {
+      border-color: var(--primary);
+    }
+
+    /* FILA DE COLOR DOMINANTE */
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .color-picker-row input[type="color"] {
+      width: 44px;
+      height: 38px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .color-picker-row input[type="text"] {
+      margin-bottom: 0;
+      flex: 1;
+    }
+
+    .file-input-wrapper {
+      margin-bottom: 8px;
+    }
+    .file-input-wrapper input[type="file"] { display: none; }
+    .file-custom-btn {
+      display: block;
+      background: #1e2230;
+      border: 1px dashed #3a415a;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      text-align: center;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.2s ease;
+    }
+    .file-custom-btn.loaded {
+      border: 1px solid var(--correct);
+      color: var(--correct);
+      background: rgba(0, 230, 118, 0.08);
+    }
+    .file-custom-btn.sfx-btn {
+      border-color: #818cf8;
+      color: #c7d2fe;
+    }
+
+    .expand-actions-bar {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0 16px 0;
+    }
+    .btn-expand {
+      flex: 1;
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px dashed rgba(255,255,255,0.25);
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+    .btn-add-q {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-rem-q {
+      background: rgba(255, 23, 68, 0.12);
+      border-color: var(--wrong);
+      color: var(--wrong);
+    }
+
+    .btn-record-mode {
+      position: sticky;
+      bottom: 12px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), #ff5252);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 900;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      box-shadow: 0 6px 20px rgba(255, 0, 127, 0.4);
+      cursor: pointer;
+      text-transform: uppercase;
+      z-index: 10;
+    }
+
+    /* MODO GRABACIÓN VERTICAL (9:16) */
+    #record-screen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: #000;
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .bg-media-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+    #bg-video-player, #bg-img-player {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+    .video-overlay-dim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.7) 100%);
+      z-index: 1;
+    }
+
+    #confetti-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 35;
+    }
+
+    .btn-exit-record {
+      position: absolute;
+      top: max(12px, env(safe-area-inset-top));
+      right: 12px;
+      z-index: 50;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quiz-stage {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 395px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 16px 85px 16px;
+      gap: 12px;
+    }
+
+    /* BADGE CONTADOR PREGUNTA */
+    .question-counter-badge {
+      font-family: var(--font-display);
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 5px 16px;
+      border-radius: 999px;
+      color: #fff;
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      animation: popIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .white-card {
+      position: relative;
+      background: var(--card-white);
+      color: var(--text-dark);
+      border-radius: 20px;
+      padding: 18px 16px;
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.45);
+      width: 100%;
+      text-align: center;
+      animation: popIn 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .white-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(115deg, transparent, rgba(255,255,255,0.6), transparent);
+      transform: skewX(-20deg);
+      animation: cardShine 1.1s ease-out 0.15s forwards;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.88) translateY(16px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .card-exit {
+      animation: popOut 0.18s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+    }
+
+    @keyframes popOut {
+      0% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.9) translateY(-12px); }
+    }
+
+    @keyframes cardShine {
+      0% { left: -60%; opacity: 1; }
+      100% { left: 130%; opacity: 0; }
+    }
+
+    .pill-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), #ff0055);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 900;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(255, 0, 127, 0.45);
+    }
+
+    .welcome-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #0f172a;
+    }
+
+    /* TARJETA DE PREGUNTA */
+    .question-header-card {
+      background: var(--card-white);
+      color: var(--text-dark);
+      border-radius: 16px;
+      padding: 12px 14px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,255,255,0.9);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.25) backwards;
+    }
+
+    .question-header-text {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 900;
+      line-height: 1.25;
+      text-transform: uppercase;
+      color: #0f172a;
+    }
+
+    /* BARRA SEGMENTADA (6 SEGUNDOS) */
+    .timer-segmented-wrapper {
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timer-segments-bar {
+      width: 100%;
+      height: 11px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .segment-guide {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2.5px;
+      background: rgba(255,255,255,0.95);
+      z-index: 4;
+    }
+    .guide-1 { left: 33.333%; }
+    .guide-2 { left: 66.666%; }
+
+    .timer-segmented-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #FF1744 0%, #FFD600 50%, #00E676 100%);
+      transform-origin: left center;
+      z-index: 2;
+    }
+
+    /* BADGE DE PUNTOS DINÁMICO */
+    .points-badge {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 900;
+      padding: 4px 14px;
+      border-radius: 999px;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #00E676, #00b0ff);
+      box-shadow: 0 2px 10px rgba(0, 230, 118, 0.45);
+      transition: background 0.3s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+    }
+    .points-badge.tier-2 {
+      background: linear-gradient(135deg, #FFC400, #ff9100) !important;
+      box-shadow: 0 2px 10px rgba(255, 196, 0, 0.5) !important;
+      transform: scale(1.05);
+    }
+    .points-badge.tier-1 {
+      background: linear-gradient(135deg, #FF1744, #d50000) !important;
+      box-shadow: 0 2px 10px rgba(255, 23, 68, 0.55) !important;
+      transform: scale(1.08);
+      animation: pulsePoints 0.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulsePoints {
+      from { transform: scale(1.04); }
+      to { transform: scale(1.1); }
+    }
+
+    /* TARJETA PRINCIPAL CON IMAGEN */
+    .pixel-main-card {
+      position: relative;
+      background: var(--card-white);
+      color: var(--text-dark);
+      border-radius: 22px;
+      padding: 14px;
+      width: 100%;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.25) backwards;
+      animation-delay: 0.1s;
+      will-change: transform;
+      overflow: hidden;
+    }
+
+    .pixel-main-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent);
+      transform: skewX(-20deg);
+      animation: cardShine 1.1s ease-out 0.45s forwards;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .canvas-viewport-wrap {
+      position: relative;
+      width: 100%;
+      max-height: 52vh;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.06);
+    }
+
+    #pixel-canvas {
+      width: 100%;
+      height: auto;
+      max-height: 50vh;
+      display: block;
+      object-fit: contain;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* DESTELLO FLASH */
+    .canvas-flash-overlay {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .canvas-viewport-wrap.do-flash .canvas-flash-overlay {
+      animation: microFlash 0.38s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    @keyframes microFlash {
+      0% { opacity: 0; }
+      40% { opacity: 0.9; }
+      100% { opacity: 0; }
+    }
+
+    /* REVELACIÓN DEL NOMBRE (CRECE SUAVEMENTE) */
+    .answer-reveal-box {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.25),
+                  opacity 0.35s ease,
+                  transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25),
+                  margin-top 0.3s ease;
+      width: 100%;
+      margin-top: 0;
+    }
+
+    .answer-reveal-box.show {
+      max-height: 90px;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 12px;
+    }
+
+    .answer-name-banner {
+      background: linear-gradient(135deg, var(--accent), #ff0055);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(255, 0, 127, 0.45);
+      text-align: center;
+      transition: background 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    }
+
+    /* TEMBLOR PROGRESIVO DE URGENCIA */
+    .card-urgency-1 { animation: shakeLvl1 0.14s infinite linear !important; }
+    .card-urgency-2 { animation: shakeLvl2 0.12s infinite linear !important; }
+    .card-urgency-3 { animation: shakeLvl3 0.09s infinite linear !important; }
+
+    @keyframes shakeLvl1 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-0.8px, 0.4px) rotate(-0.15deg); }
+      75% { transform: translate(0.8px, -0.4px) rotate(0.15deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    @keyframes shakeLvl2 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-1.4px, 0.6px) rotate(-0.3deg); }
+      75% { transform: translate(1.4px, -0.6px) rotate(0.3deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    @keyframes shakeLvl3 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-2px, 0.8px) rotate(-0.45deg); }
+      75% { transform: translate(2px, -0.8px) rotate(0.45deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    /* STICKERS FLOTANTES */
+    .hook-stickers-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 25;
+      display: none;
+    }
+    .hook-sticker {
+      position: absolute;
+      width: 65px;
+      height: 65px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.65));
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+    .hook-sticker.show {
+      opacity: 1;
+      transform: scale(1);
+      animation: stickerAppear 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.35) forwards;
+    }
+    .hook-sticker.hiding {
+      animation: stickerDisappear 0.2s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+    }
+
+    @keyframes stickerAppear {
+      0% { opacity: 0; transform: scale(0) rotate(-15deg); }
+      70% { opacity: 1; transform: scale(1.15) rotate(6deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes stickerDisappear {
+      0% { opacity: 1; transform: scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: scale(0) rotate(15deg); }
+    }
+    .hook-sticker.pos-1 { top: 25%; left: 8%; }
+    .hook-sticker.pos-2 { top: 24%; right: 9%; }
+    .hook-sticker.pos-3 { bottom: 30%; left: 9%; }
+    .hook-sticker.pos-4 { bottom: 32%; right: 8%; }
+
+    /* CONTROLES INFERIORES */
+    .thumb-controls {
+      position: absolute;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      left: 10px;
+      right: 10px;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: rgba(13, 15, 23, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .ctrl-btn {
+      background: #202538;
+      border: 1px solid #3b4362;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 8px 2px;
+      border-radius: 9px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1;
+      height: 48px;
+      transition: transform 0.1s ease, background 0.2s ease;
+    }
+    .ctrl-btn:active {
+      transform: scale(0.92);
+      background: var(--primary);
+      color: #000;
+    }
+    .ctrl-btn span.icon { font-size: 1.05rem; }
+
+    /* MODAL BIBLIOTECA */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-box {
+      background: var(--panel-bg);
+      border: 1px solid #33384c;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 18px;
+      padding: 16px;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .modal-title { font-family: var(--font-display); font-size: 1rem; font-weight: 800; }
+    .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
+    .projects-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .project-item {
+      background: #0f111a;
+      border: 1px solid #262c3e;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .project-info h4 { font-size: 0.82rem; font-weight: 700; color: #fff; }
+    .project-info span { font-size: 0.65rem; color: var(--text-muted); }
+    .project-actions { display: flex; gap: 6px; }
+    .btn-proj-load { background: var(--primary); color: #000; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.72rem; cursor: pointer; }
+    .btn-proj-del { background: rgba(255, 23, 68, 0.2); color: var(--wrong); border: 1px solid var(--wrong); padding: 6px 8px; border-radius: 6px; font-weight: 700; font-size: 0.72rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- PANEL DE CONFIGURACIÓN -->
+  <div class="setup-container">
+    <div class="header-bar">
+      <div class="logo">👾 PIXEL GUESS PRO 9:16</div>
+      <div class="top-actions">
+        <button type="button" class="btn-sm btn-lib" onclick="openLibraryModal()">📂 Biblioteca</button>
+        <button type="button" class="btn-sm btn-save" onclick="saveCurrentProjectToLibrary()">💾 Guardar</button>
+      </div>
+    </div>
+
+    <!-- 1. VIDEO / GIF FONDO -->
+    <div class="card-setup">
+      <div class="card-setup-title">🎬 Fondo Global del Video</div>
+      <div class="file-input-wrapper">
+        <label for="bg-video-input" class="file-custom-btn" id="lbl-bg-video">Cargar Video MP4 o GIF de fondo</label>
+        <input type="file" id="bg-video-input" accept="video/mp4,video/*,image/gif,image/*" onchange="handleBgVideoSelected(event)" />
+      </div>
+    </div>
+
+    <!-- 2. STICKERS & SFX POP -->
+    <div class="card-setup" style="border-left: 4px solid var(--accent);">
+      <div class="card-setup-title">✨ Stickers y SFX Pop (Permanente)</div>
+      <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:8px;">
+        4 stickers flotantes PNG con sonido Pop (50% volumen) guardados permanentemente.
+      </p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+        <div class="file-input-wrapper">
+          <label for="stk-1-input" class="file-custom-btn" id="lbl-stk-1">1. Superior Izq</label>
+          <input type="file" id="stk-1-input" accept="image/png,image/webp" onchange="handleStickerUpload(event, 0)" />
+        </div>
+        <div class="file-input-wrapper">
+          <label for="stk-2-input" class="file-custom-btn" id="lbl-stk-2">2. Superior Der</label>
+          <input type="file" id="stk-2-input" accept="image/png,image/webp" onchange="handleStickerUpload(event, 1)" />
+        </div>
+        <div class="file-input-wrapper">
+          <label for="stk-3-input" class="file-custom-btn" id="lbl-stk-3">3. Inferior Izq</label>
+          <input type="file" id="stk-3-input" accept="image/png,image/webp" onchange="handleStickerUpload(event, 2)" />
+        </div>
+        <div class="file-input-wrapper">
+          <label for="stk-4-input" class="file-custom-btn" id="lbl-stk-4">4. Inferior Der</label>
+          <input type="file" id="stk-4-input" accept="image/png,image/webp" onchange="handleStickerUpload(event, 3)" />
+        </div>
+      </div>
+      <div class="file-input-wrapper">
+        <label for="sfx-pop-input" class="file-custom-btn sfx-btn" id="lbl-sfx-pop">🎵 Audio 2: SFX Pop Stickers (Permanente)</label>
+        <input type="file" id="sfx-pop-input" accept="audio/*" onchange="handlePersistentAudioUpload(event, 'sfx_pop', 'lbl-sfx-pop')" />
+      </div>
+    </div>
+
+    <!-- 3. SALUDO INTRO -->
+    <div class="card-setup">
+      <div class="card-setup-title">👋 Pantalla 1: Saludo Intro (Permanente)</div>
+      <label>Texto del Saludo</label>
+      <textarea id="intro-text" rows="2" placeholder="¿Podrás adivinar estos logos con solo verlos pixeleados?" oninput="triggerProjectAutosave()"></textarea>
+      
+      <div class="file-input-wrapper">
+        <label for="audio-intro-input" class="file-custom-btn sfx-btn" id="lbl-audio-intro">🎵 Audio 1: Saludo (Permanente - Delay 0.10s)</label>
+        <input type="file" id="audio-intro-input" accept="audio/*" onchange="handlePersistentAudioUpload(event, 'audio_intro', 'lbl-audio-intro')" />
+      </div>
+    </div>
+
+    <!-- 4. SFX CUENTA REGRESIVA -->
+    <div class="card-setup" style="border-left: 4px solid var(--gold);">
+      <div class="card-setup-title">⏱️ Audio 3: Cuenta Regresiva 6s + ¡Correcto!</div>
+      <div class="file-input-wrapper">
+        <label for="audio-timer-input" class="file-custom-btn sfx-btn" id="lbl-audio-timer">🎵 Audio 3: SFX 6 Seg + Correcto (Permanente)</label>
+        <input type="file" id="audio-timer-input" accept="audio/*" onchange="handlePersistentAudioUpload(event, 'audio_timer_6s', 'lbl-audio-timer')" />
+      </div>
+    </div>
+
+    <!-- 5. PREGUNTAS (1 A 5) -->
+    <div id="questions-list-container"></div>
+
+    <div class="expand-actions-bar">
+      <button type="button" class="btn-expand btn-add-q" onclick="addQuestion()">➕ Añadir Pregunta (<span id="txt-q-count">3</span>/5)</button>
+      <button type="button" class="btn-expand btn-rem-q" onclick="removeQuestion()">🗑️ Quitar Pregunta</button>
+    </div>
+
+    <!-- 6. DESPEDIDA / OUTRO -->
+    <div class="card-setup">
+      <div class="card-setup-title">🏁 Pantalla Final: Despedida (Permanente)</div>
+      <label>Texto de Cierre</label>
+      <textarea id="outro-text" rows="2" placeholder="¿Cuántos puntos conseguiste en total? ¡Comenta tu puntuación y sígueme!" oninput="triggerProjectAutosave()"></textarea>
+
+      <div class="file-input-wrapper">
+        <label for="audio-outro-input" class="file-custom-btn sfx-btn" id="lbl-audio-outro">🎵 Audio 6: Despedida (Permanente - Delay 0.10s)</label>
+        <input type="file" id="audio-outro-input" accept="audio/*" onchange="handlePersistentAudioUpload(event, 'audio_outro', 'lbl-audio-outro')" />
+      </div>
+    </div>
+
+    <button type="button" class="btn-record-mode" onclick="enterRecordMode()">
+      🎥 Entrar en Modo Grabación (9:16)
+    </button>
+  </div>
+
+  <!-- STAGE DE GRABACIÓN VERTICAL (9:16) -->
+  <div id="record-screen">
+    <div class="bg-media-container">
+      <video id="bg-video-player" autoplay loop muted playsinline style="display: none;"></video>
+      <img id="bg-img-player" alt="Fondo" style="display: none;" />
+      <div class="video-overlay-dim"></div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Stickers Flotantes -->
+    <div class="hook-stickers-layer" id="hook-stickers-layer">
+      <img id="hook-stk-1" class="hook-sticker pos-1" src="" alt="" />
+      <img id="hook-stk-2" class="hook-sticker pos-2" src="" alt="" />
+      <img id="hook-stk-3" class="hook-sticker pos-3" src="" alt="" />
+      <img id="hook-stk-4" class="hook-sticker pos-4" src="" alt="" />
+    </div>
+
+    <button class="btn-exit-record" title="Volver al panel" onclick="exitRecordMode()">✕</button>
+
+    <div class="quiz-stage" id="quiz-stage"></div>
+
+    <!-- BOTONERA INFERIOR (4 BOTONES) -->
+    <div class="thumb-controls">
+      <button class="ctrl-btn" onclick="stepIntro()"><span class="icon">🚀</span><span>Intro</span></button>
+      <button class="ctrl-btn" onclick="stepGuess()"><span class="icon">❓</span><span>Adivinanza</span></button>
+      <button class="ctrl-btn" onclick="stepStartCountdown()"><span class="icon">⏱️</span><span>6 seg</span></button>
+      <button class="ctrl-btn" onclick="stepNextOrFinish()"><span class="icon">⏩</span><span>Siguiente</span></button>
+    </div>
+  </div>
+
+  <!-- Modal Biblioteca -->
+  <div class="modal-backdrop" id="library-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">📚 Proyectos Guardados</div>
+        <button class="modal-close" onclick="closeLibraryModal()">✕</button>
+      </div>
+      <div class="projects-list" id="projects-list"></div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT PRINCIPAL -->
+  <script>
+    /* 1. MOTOR DE AUDIO - WEB AUDIO API */
+    let audioCtx = null;
+    const audioBufferCache = {};
+    let activeVoiceSources = [];
+    let countdownSfxSource = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    async function preloadAudioToBuffer(key, blob) {
+      if (!blob) {
+        audioBufferCache[key] = null;
+        return;
+      }
+      try {
+        const ctx = getAudioContext();
+        const arrayBuffer = await blob.arrayBuffer();
+        audioBufferCache[key] = await ctx.decodeAudioData(arrayBuffer);
+      } catch (e) {
+        console.warn('Error decodificando audio:', key, e);
+      }
+    }
+
+    function stopAllVoices() {
+      activeVoiceSources.forEach(s => {
+        try { s.onended = null; s.stop(); } catch(e){}
+      });
+      activeVoiceSources = [];
+    }
+
+    function playVoiceInstant(key, delayMs = 0, onEnded = null) {
+      stopAllVoices();
+      if (!audioBufferCache[key]) {
+        if (onEnded) setTimeout(onEnded, delayMs);
+        return null;
+      }
+      const timer = setTimeout(() => {
+        const ctx = getAudioContext();
+        const src = ctx.createBufferSource();
+        src.buffer = audioBufferCache[key];
+        src.connect(ctx.destination);
+        if (onEnded) src.onended = onEnded;
+        src.start(0);
+        activeVoiceSources.push(src);
+      }, delayMs);
+      return timer;
+    }
+
+    function playSfxInstant(key, volume = 0.5) {
+      if (!audioBufferCache[key]) return null;
+      const ctx = getAudioContext();
+      const src = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      gain.gain.value = volume;
+      src.buffer = audioBufferCache[key];
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      src.start(0);
+      return src;
+    }
+
+    function stopCountdownSfx() {
+      if (countdownSfxSource) {
+        try { countdownSfxSource.stop(); } catch(e){}
+        countdownSfxSource = null;
+      }
+    }
+
+    /* 2. DATOS DE PREGUNTAS (1 A 5) */
+    let questionsTotal = 3;
+    let currentQuestionIdx = 0;
+
+    const persistentAudioKeys = ['audio_intro', 'sfx_pop', 'audio_timer_6s', 'audio_outro'];
+    const persistentStickerBlobs = [null, null, null, null];
+
+    const projectFiles = {
+      bgVideo: null,
+      questions: []
+    };
+
+    function initDefaultQuestions() {
+      projectFiles.questions = [];
+      const defaultBlocks = [24, 20, 16, 16, 16];
+      for (let i = 1; i <= 5; i++) {
+        projectFiles.questions.push({
+          qText: '¿Reconoces este logo?',
+          ansText: `LOGO ${i}`,
+          initialBlocks: defaultBlocks[i - 1],
+          bannerColor: '#FF007F',
+          imgFile: null,
+          imgBitmap: null,
+          qAudio: null,
+          ansAudio: null
+        });
+      }
+    }
+    initDefaultQuestions();
+
+    function renderQuestionsSetupUI() {
+      const container = document.getElementById('questions-list-container');
+      container.innerHTML = '';
+
+      for (let n = 1; n <= questionsTotal; n++) {
+        const qData = projectFiles.questions[n - 1];
+        const blocksVal = qData.initialBlocks || (n === 1 ? 24 : (n === 2 ? 20 : 16));
+        const colorVal = qData.bannerColor || '#FF007F';
+
+        const card = document.createElement('div');
+        card.className = 'card-setup';
+        card.innerHTML = `
+          <div class="card-setup-title">❓ Pregunta ${n}</div>
+          
+          <label>Texto de la Pregunta</label>
+          <input type="text" id="q-text-${n}" value="${escapeHtml(qData.qText)}" oninput="updateQData(${n}, 'qText', this.value)" placeholder="Ej: ¿Qué personaje es este?" />
+
+          <label>Nombre a Adivinar (Respuesta Correcta)</label>
+          <input type="text" id="q-ans-${n}" value="${escapeHtml(qData.ansText)}" oninput="updateQData(${n}, 'ansText', this.value)" placeholder="Ej: BARBIE" />
+
+          <!-- SLIDER E INPUT DE PIXELEADO -->
+          <label>Intensidad de Pixeleado Inicial (Bloques: 6 a 80)</label>
+          <div class="pixel-control-group">
+            <input type="range" id="q-pixel-range-${n}" min="6" max="80" value="${blocksVal}" oninput="syncPixelInput(${n}, this.value)" />
+            <input type="number" id="q-pixel-num-${n}" class="pixel-val-box" min="6" max="80" value="${blocksVal}" oninput="syncPixelRange(${n}, this.value)" onkeydown="if(event.key==='Enter'){this.blur();}" />
+          </div>
+
+          <!-- COLOR HEREDADO / PERSONALIZADO DEL BANNER DE RESPUESTA -->
+          <label>Color del Banner de Respuesta (Heredado de Imagen)</label>
+          <div class="color-picker-row">
+            <input type="color" id="q-color-${n}" value="${colorVal}" onchange="updateQData(${n}, 'bannerColor', this.value); syncQColorInput(${n}, this.value);" />
+            <input type="text" id="q-color-hex-${n}" value="${colorVal}" oninput="updateQData(${n}, 'bannerColor', this.value); syncQColorPicker(${n}, this.value);" onkeydown="if(event.key==='Enter'){this.blur();}" />
+          </div>
+
+          <div class="file-input-wrapper">
+            <label for="q-img-input-${n}" class="file-custom-btn ${qData.imgFile ? 'loaded' : ''}" id="lbl-q-img-${n}">
+              ${qData.imgFile ? '✓ Imagen: ' + qData.imgFile.name : '🖼️ Subir Imagen para Pixelar'}
+            </label>
+            <input type="file" id="q-img-input-${n}" accept="image/*" onchange="handleQuestionImageSelected(event, ${n})" />
+          </div>
+
+          <div class="file-input-wrapper">
+            <label for="q-audio-input-${n}" class="file-custom-btn sfx-btn ${qData.qAudio ? 'loaded' : ''}" id="lbl-q-audio-${n}">
+              ${qData.qAudio ? '✓ Audio Pregunta Listo' : '🎵 Audio 4: Pregunta (Delay 0.30s)'}
+            </label>
+            <input type="file" id="q-audio-input-${n}" accept="audio/*" onchange="handleQuestionAudioSelected(event, ${n}, 'qAudio')" />
+          </div>
+
+          <div class="file-input-wrapper">
+            <label for="q-ans-audio-input-${n}" class="file-custom-btn sfx-btn ${qData.ansAudio ? 'loaded' : ''}" id="lbl-q-ans-audio-${n}">
+              ${qData.ansAudio ? '✓ Audio Respuesta Listo' : '🎵 Audio 5: Revelación Respuesta (Delay 0.15s)'}
+            </label>
+            <input type="file" id="q-ans-audio-input-${n}" accept="audio/*" onchange="handleQuestionAudioSelected(event, ${n}, 'ansAudio')" />
+          </div>
+        `;
+        container.appendChild(card);
+      }
+      document.getElementById('txt-q-count').textContent = questionsTotal;
+    }
+
+    function syncPixelInput(n, val) {
+      val = Math.max(6, Math.min(80, parseInt(val) || 20));
+      document.getElementById(`q-pixel-num-${n}`).value = val;
+      updateQData(n, 'initialBlocks', val);
+    }
+
+    function syncPixelRange(n, val) {
+      val = Math.max(6, Math.min(80, parseInt(val) || 20));
+      document.getElementById(`q-pixel-range-${n}`).value = val;
+      updateQData(n, 'initialBlocks', val);
+    }
+
+    function syncQColorInput(n, hex) {
+      if (!hex) return;
+      document.getElementById(`q-color-hex-${n}`).value = hex;
+    }
+
+    function syncQColorPicker(n, hex) {
+      if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) return;
+      document.getElementById(`q-color-${n}`).value = hex;
+    }
+
+    function updateQData(n, field, val) {
+      projectFiles.questions[n - 1][field] = val;
+      triggerProjectAutosave();
+    }
+
+    function addQuestion() {
+      if (questionsTotal >= 5) {
+        alert('El límite máximo son 5 preguntas.');
+        return;
+      }
+      questionsTotal++;
+      renderQuestionsSetupUI();
+      triggerProjectAutosave();
+    }
+
+    function removeQuestion() {
+      if (questionsTotal <= 1) {
+        alert('Debes incluir al menos 1 pregunta.');
+        return;
+      }
+      questionsTotal--;
+      renderQuestionsSetupUI();
+      triggerProjectAutosave();
+    }
+
+    function handleBgVideoSelected(event) {
+      const file = event.target.files[0];
+      const lbl = document.getElementById('lbl-bg-video');
+      if (file) {
+        projectFiles.bgVideo = file;
+        lbl.textContent = `✓ Fondo: ${file.name}`;
+        lbl.classList.add('loaded');
+        triggerProjectAutosave();
+      }
+    }
+
+    async function handlePersistentAudioUpload(event, dbKey, labelId) {
+      getAudioContext();
+      const file = event.target.files[0];
+      const lbl = document.getElementById(labelId);
+      if (!file) return;
+
+      lbl.textContent = `✓ ${file.name} (Guardado Permanente)`;
+      lbl.classList.add('loaded');
+      await preloadAudioToBuffer(dbKey, file);
+      await savePermanentSetting(dbKey, file);
+    }
+
+    async function handleStickerUpload(event, idx) {
+      const file = event.target.files[0];
+      const lbl = document.getElementById(`lbl-stk-${idx + 1}`);
+      if (!file) return;
+      persistentStickerBlobs[idx] = file;
+      lbl.textContent = `✓ Sticker ${idx + 1}: ${file.name}`;
+      lbl.classList.add('loaded');
+      await savePermanentSetting(`stk_blob_${idx}`, file);
+    }
+
+    async function handleQuestionImageSelected(event, n) {
+      const file = event.target.files[0];
+      const lbl = document.getElementById(`lbl-q-img-${n}`);
+      if (!file) return;
+
+      projectFiles.questions[n - 1].imgFile = file;
+      lbl.textContent = `✓ Imagen: ${file.name}`;
+      lbl.classList.add('loaded');
+
+      const img = new Image();
+      img.onload = () => {
+        projectFiles.questions[n - 1].imgBitmap = img;
+
+        // EXTRAER AUTOMÁTICAMENTE EL COLOR DOMINANTE
+        const dominant = extractDominantColor(img);
+        projectFiles.questions[n - 1].bannerColor = dominant;
+
+        const colorPicker = document.getElementById(`q-color-${n}`);
+        const colorHex = document.getElementById(`q-color-hex-${n}`);
+        if (colorPicker) colorPicker.value = dominant;
+        if (colorHex) colorHex.value = dominant;
+
+        triggerProjectAutosave();
+      };
+      img.src = URL.createObjectURL(file);
+
+      triggerProjectAutosave();
+    }
+
+    /* ALGORITMO INTELIGENTE DE COLOR DOMINANTE */
+    function extractDominantColor(img) {
+      try {
+        const cvs = document.createElement('canvas');
+        const ctx = cvs.getContext('2d', { willReadFrequently: true });
+        cvs.width = 40;
+        cvs.height = 40;
+        ctx.drawImage(img, 0, 0, 40, 40);
+        const imgData = ctx.getImageData(0, 0, 40, 40).data;
+
+        const colorCounts = {};
+        let maxCount = 0;
+        let dominantHex = '#FF007F';
+
+        let totalR = 0, totalG = 0, totalB = 0, validPixels = 0;
+
+        for (let i = 0; i < imgData.length; i += 4) {
+          const r = imgData[i];
+          const g = imgData[i + 1];
+          const b = imgData[i + 2];
+          const a = imgData[i + 3];
+
+          if (a < 120) continue; // Descartar transparente
+
+          const isWhite = (r > 235 && g > 235 && b > 235);
+          const isBlack = (r < 30 && g < 30 && b < 30);
+
+          if (!isWhite && !isBlack) {
+            // Cuantizar a múltiplos de 16 para agrupar tonos afines
+            const qr = Math.round(r / 16) * 16;
+            const qg = Math.round(g / 16) * 16;
+            const qb = Math.round(b / 16) * 16;
+            const key = `${qr},${qg},${qb}`;
+            colorCounts[key] = (colorCounts[key] || 0) + 1;
+
+            if (colorCounts[key] > maxCount) {
+              maxCount = colorCounts[key];
+              dominantHex = rgbToHex(qr, qg, qb);
+            }
+          }
+
+          totalR += r;
+          totalG += g;
+          totalB += b;
+          validPixels++;
+        }
+
+        if (maxCount === 0 && validPixels > 0) {
+          const avgR = Math.round(totalR / validPixels);
+          const avgG = Math.round(totalG / validPixels);
+          const avgB = Math.round(totalB / validPixels);
+          dominantHex = rgbToHex(avgR, avgG, avgB);
+        }
+
+        return dominantHex;
+      } catch (e) {
+        return '#FF007F';
+      }
+    }
+
+    function rgbToHex(r, g, b) {
+      const clamp = v => Math.max(0, Math.min(255, v));
+      return '#' + [clamp(r), clamp(g), clamp(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function adjustColorBrightness(hex, percent) {
+      let num = parseInt(hex.replace('#',''), 16);
+      if (isNaN(num)) return hex;
+      let r = (num >> 16) + percent;
+      let g = ((num >> 8) & 0x00FF) + percent;
+      let b = (num & 0x0000FF) + percent;
+      r = Math.max(0, Math.min(255, r));
+      g = Math.max(0, Math.min(255, g));
+      b = Math.max(0, Math.min(255, b));
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function hexToRgba(hex, alpha) {
+      let num = parseInt(hex.replace('#',''), 16);
+      if (isNaN(num)) return `rgba(255, 0, 127, ${alpha})`;
+      let r = (num >> 16);
+      let g = ((num >> 8) & 0x00FF);
+      let b = (num & 0x0000FF);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function isLightColor(hex) {
+      let num = parseInt(hex.replace('#',''), 16);
+      if (isNaN(num)) return false;
+      let r = (num >> 16);
+      let g = ((num >> 8) & 0x00FF);
+      let b = (num & 0x0000FF);
+      let luma = 0.299 * r + 0.587 * g + 0.114 * b;
+      return luma > 175;
+    }
+
+    async function handleQuestionAudioSelected(event, n, type) {
+      getAudioContext();
+      const file = event.target.files[0];
+      const lbl = document.getElementById(type === 'qAudio' ? `lbl-q-audio-${n}` : `lbl-q-ans-audio-${n}`);
+      if (!file) return;
+
+      projectFiles.questions[n - 1][type] = file;
+      lbl.textContent = `✓ ${file.name}`;
+      lbl.classList.add('loaded');
+
+      await preloadAudioToBuffer(`q_${n}_${type}`, file);
+      triggerProjectAutosave();
+    }
+
+    /* 3. COLORES DE DIFICULTAD DEL BADGE SUPERIOR */
+    const DIFFICULTY_PALETTES = {
+      verde: {
+        bg: 'linear-gradient(135deg, #00E676, #10b981)',
+        border: '#00E676',
+        shadow: 'rgba(0, 230, 118, 0.5)'
+      },
+      lima: {
+        bg: 'linear-gradient(135deg, #9ACD32, #65a30d)',
+        border: '#9ACD32',
+        shadow: 'rgba(154, 205, 50, 0.5)'
+      },
+      amarillo: {
+        bg: 'linear-gradient(135deg, #FFC400, #f59e0b)',
+        border: '#FFC400',
+        shadow: 'rgba(255, 196, 0, 0.55)'
+      },
+      naranja: {
+        bg: 'linear-gradient(135deg, #FF8A00, #ea580c)',
+        border: '#FF8A00',
+        shadow: 'rgba(255, 138, 0, 0.55)'
+      },
+      rojo: {
+        bg: 'linear-gradient(135deg, #FF1744, #b91c1c)',
+        border: '#FF1744',
+        shadow: 'rgba(255, 23, 68, 0.6)'
+      }
+    };
+
+    function getDifficultyBadgeStyle(index, total) {
+      let scheme = [];
+      if (total === 1) scheme = ['verde'];
+      else if (total === 2) scheme = ['verde', 'rojo'];
+      else if (total === 3) scheme = ['verde', 'amarillo', 'rojo'];
+      else if (total === 4) scheme = ['verde', 'lima', 'amarillo', 'rojo'];
+      else scheme = ['verde', 'lima', 'amarillo', 'naranja', 'rojo'];
+
+      const colorKey = scheme[Math.min(index, scheme.length - 1)] || 'verde';
+      return DIFFICULTY_PALETTES[colorKey];
+    }
+
+    /* 4. RENDERIZADO DEL CANVAS PIXELEADO / LIMPIO */
+    function renderPixelatedCanvas(blocksX) {
+      try {
+        const canvas = document.getElementById('pixel-canvas');
+        if (!canvas) return;
+        const q = projectFiles.questions[currentQuestionIdx];
+        const img = q.imgBitmap;
+        if (!img) return;
+
+        const natW = img.naturalWidth || img.width || 400;
+        const natH = img.naturalHeight || img.height || 300;
+        const aspect = natH / natW;
+        const blocksY = Math.max(3, Math.round(blocksX * aspect));
+
+        if (canvas._currentBX === blocksX && canvas._currentBY === blocksY) return;
+        canvas._currentBX = blocksX;
+        canvas._currentBY = blocksY;
+
+        canvas.width = blocksX;
+        canvas.height = blocksY;
+
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 0, 0, blocksX, blocksY);
+      } catch (err) {
+        console.error('Error renderizando pixel canvas:', err);
+      }
+    }
+
+    function renderCleanCanvas() {
+      try {
+        const canvas = document.getElementById('pixel-canvas');
+        if (!canvas) return;
+        const q = projectFiles.questions[currentQuestionIdx];
+        const img = q.imgBitmap;
+        if (!img) return;
+
+        canvas._currentBX = -1;
+        canvas._currentBY = -1;
+
+        const natW = img.naturalWidth || img.width || 400;
+        const natH = img.naturalHeight || img.height || 300;
+
+        canvas.width = natW;
+        canvas.height = natH;
+
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, 0, natW, natH);
+      } catch (err) {
+        console.error('Error renderizando clean canvas:', err);
+      }
+    }
+
+    /* 5. TEMPORIZADOR Y PAUILLAS DE PUNTOS */
+    let countdownInterval = null;
+    let countdownTimer = null;
+    let countdownStart = 0;
+    let urgencyShakeTimers = [];
+    const COUNTDOWN_TIME = 6000; // 6 segundos exactos
+
+    function clearTimersAndShake() {
+      clearInterval(countdownInterval);
+      clearTimeout(countdownTimer);
+      urgencyShakeTimers.forEach(t => clearTimeout(t));
+      urgencyShakeTimers = [];
+      stopCountdownSfx();
+    }
+
+    function updatePointsBadge(pts) {
+      const badge = document.getElementById('points-tier-badge');
+      if (!badge) return;
+
+      badge.classList.remove('tier-2', 'tier-1');
+      if (pts === 3) {
+        badge.innerHTML = '⭐ ¡GANAS 3 PTS!';
+      } else if (pts === 2) {
+        badge.classList.add('tier-2');
+        badge.innerHTML = '⚡ ¡GANAS 2 PTS!';
+      } else {
+        badge.classList.add('tier-1');
+        badge.innerHTML = '🔥 ¡GANAS 1 PT!';
+      }
+    }
+
+    /* 6. STICKERS POP */
+    let stickerTimeouts = [];
+    let stickerClearTimeout = null;
+
+    function triggerHookStickersPop() {
+      clearHookStickers(false);
+      const layer = document.getElementById('hook-stickers-layer');
+      layer.style.display = 'block';
+
+      [0, 150, 300, 450].forEach((delay, idx) => {
+        const t = setTimeout(() => {
+          const imgEl = document.getElementById(`hook-stk-${idx + 1}`);
+          const file = persistentStickerBlobs[idx];
+          if (file && imgEl) {
+            imgEl.src = URL.createObjectURL(file);
+            imgEl.classList.remove('hiding');
+            imgEl.classList.add('show');
+            playSfxInstant('sfx_pop', 0.5);
+          }
+        }, delay);
+        stickerTimeouts.push(t);
+      });
+    }
+
+    function clearHookStickers(animate = true) {
+      stickerTimeouts.forEach(t => clearTimeout(t));
+      stickerTimeouts = [];
+      clearTimeout(stickerClearTimeout);
+      const layer = document.getElementById('hook-stickers-layer');
+      if (!layer) return;
+
+      if (animate) {
+        for (let i = 1; i <= 4; i++) {
+          const el = document.getElementById(`hook-stk-${i}`);
+          if (el && el.classList.contains('show')) {
+            el.classList.remove('show');
+            el.classList.add('hiding');
+          }
+        }
+        stickerClearTimeout = setTimeout(() => {
+          layer.style.display = 'none';
+        }, 200);
+      } else {
+        layer.style.display = 'none';
+      }
+    }
+
+    function renderStepWithTransition(renderCallback) {
+      const stage = document.getElementById('quiz-stage');
+      const cards = stage.querySelectorAll('.white-card, .question-header-card, .pixel-main-card, .question-counter-badge');
+
+      if (cards.length > 0) {
+        cards.forEach(c => c.classList.add('card-exit'));
+        clearHookStickers(true);
+        setTimeout(() => {
+          renderCallback();
+        }, 180);
+      } else {
+        renderCallback();
+      }
+    }
+
+    /* 7. FLUJO DE LOS 4 BOTONES */
+
+    /* PASO 1: INTRO (Audio 1 con 0.15s delay) */
+    function stepIntro() {
+      stopAllVoices();
+      clearTimersAndShake();
+      clearConfetti();
+
+      renderStepWithTransition(() => {
+        const stage = document.getElementById('quiz-stage');
+        const introText = document.getElementById('intro-text').value || '¿Podrás adivinar estos logos con solo verlos pixeleados?';
+
+        stage.innerHTML = `
+          <div class="white-card">
+            <div class="pill-badge">👾 DESAFÍO PIXELADO 👾</div>
+            <div class="welcome-title">${escapeHtml(introText)}</div>
+          </div>
+        `;
+
+        triggerHookStickersPop();
+        playVoiceInstant('audio_intro', 150);
+      });
+    }
+
+    /* PASO 2: ADIVINANZA (Audio 4 con 0.30s delay) */
+    function stepGuess() {
+      stopAllVoices();
+      clearTimersAndShake();
+      clearConfetti();
+
+      if (currentQuestionIdx >= questionsTotal) {
+        stepOutro();
+        return;
+      }
+
+      renderStepWithTransition(() => {
+        const stage = document.getElementById('quiz-stage');
+        const q = projectFiles.questions[currentQuestionIdx];
+        const diffStyle = getDifficultyBadgeStyle(currentQuestionIdx, questionsTotal);
+        const startBlocks = q.initialBlocks || 22;
+
+        stage.innerHTML = `
+          <div class="question-counter-badge" style="background: ${diffStyle.bg}; border-color: ${diffStyle.border}; box-shadow: 0 0 14px ${diffStyle.shadow};">
+            PREGUNTA ${currentQuestionIdx + 1} DE ${questionsTotal}
+          </div>
+
+          <div class="question-header-card" id="q-header-card">
+            <div class="question-header-text">${escapeHtml(q.qText)}</div>
+            
+            <div class="timer-segmented-wrapper">
+              <div class="timer-segments-bar">
+                <div class="segment-guide guide-1"></div>
+                <div class="segment-guide guide-2"></div>
+                <div class="timer-segmented-fill" id="timer-bar-fill" style="width: 100%;"></div>
+              </div>
+              <div class="points-badge" id="points-tier-badge">⭐ ¡GANAS 3 PTS!</div>
+            </div>
+          </div>
+
+          <div class="pixel-main-card" id="pixel-card">
+            <div class="canvas-viewport-wrap" id="canvas-wrap">
+              <canvas id="pixel-canvas"></canvas>
+              <div class="canvas-flash-overlay"></div>
+            </div>
+
+            <div class="answer-reveal-box" id="ans-box">
+              <div class="answer-name-banner" id="ans-banner">${escapeHtml(q.ansText)}</div>
+            </div>
+          </div>
+        `;
+
+        // Renderizado inicial con los bloques configurados
+        renderPixelatedCanvas(startBlocks);
+
+        // Audio 4: Pregunta (Delay 0.30s)
+        playVoiceInstant(`q_${currentQuestionIdx + 1}_qAudio`, 300);
+      });
+    }
+
+    /* PASO 3: 6 SEGUNDOS (Despixelado paulatino fluido) */
+    function stepStartCountdown() {
+      const timerFill = document.getElementById('timer-bar-fill');
+      const pixelCard = document.getElementById('pixel-card');
+      if (!timerFill || !pixelCard) return;
+
+      clearTimersAndShake();
+      stopAllVoices();
+
+      // Audio 3: SFX 6s + ¡Correcto!
+      countdownSfxSource = playSfxInstant('audio_timer_6s', 0.85);
+
+      // Resetear barra
+      timerFill.style.transition = 'none';
+      timerFill.style.width = '100%';
+      void timerFill.offsetWidth;
+
+      timerFill.style.transition = 'width 6s linear';
+      timerFill.style.width = '0%';
+
+      countdownStart = Date.now();
+      const q = projectFiles.questions[currentQuestionIdx];
+      const initialBlocks = q.initialBlocks || 22;
+      // El pixelado final ahora escala junto con el inicial: cuanto más alto
+      // el pixelado de arranque, más pixelado se queda incluso justo antes de revelar,
+      // en vez de converger siempre en el mismo techo fijo (76).
+      const preRevealBlocks = Math.round(initialBlocks * 2.4 + 18);
+
+      countdownInterval = setInterval(() => {
+        const elapsed = Date.now() - countdownStart;
+        const progress = Math.min(1, elapsed / COUNTDOWN_TIME);
+
+        // Actualización de Pastilla de Puntos
+        if (elapsed < 2000) {
+          updatePointsBadge(3);
+        } else if (elapsed < 4000) {
+          updatePointsBadge(2);
+        } else {
+          updatePointsBadge(1);
+        }
+
+        // Despixelado suave
+        const currentBlocks = Math.round(initialBlocks + (preRevealBlocks - initialBlocks) * Math.pow(progress, 0.92));
+        renderPixelatedCanvas(currentBlocks);
+      }, 40);
+
+      // Temblor de urgencia progresivo (segundos 3, 4 y 5)
+      urgencyShakeTimers.push(setTimeout(() => {
+        pixelCard.classList.add('card-urgency-1');
+      }, 3000));
+
+      urgencyShakeTimers.push(setTimeout(() => {
+        pixelCard.classList.replace('card-urgency-1', 'card-urgency-2');
+      }, 4000));
+
+      urgencyShakeTimers.push(setTimeout(() => {
+        pixelCard.classList.replace('card-urgency-2', 'card-urgency-3');
+      }, 5000));
+
+      // Segundo 6: Revelación HD
+      countdownTimer = setTimeout(() => {
+        clearInterval(countdownInterval);
+        revealAnswerClean();
+      }, 6000);
+    }
+
+    /* REVELACIÓN LIMPIA AL SEGUNDO 0 (CON COLOR HEREDADO) */
+    function revealAnswerClean() {
+      const pixelCard = document.getElementById('pixel-card');
+      const canvasWrap = document.getElementById('canvas-wrap');
+      const ansBox = document.getElementById('ans-box');
+      const ansBanner = document.getElementById('ans-banner');
+      const q = projectFiles.questions[currentQuestionIdx];
+
+      if (pixelCard) {
+        pixelCard.classList.remove('card-urgency-1', 'card-urgency-2', 'card-urgency-3');
+      }
+
+      // 1. Destello flash
+      if (canvasWrap) {
+        canvasWrap.classList.add('do-flash');
+      }
+
+      // 2. Imagen en HD completa
+      renderCleanCanvas();
+
+      // 3. Aplicar color dominante heredado al banner
+      if (ansBanner) {
+        const baseColor = q.bannerColor || '#FF007F';
+        const darkColor = adjustColorBrightness(baseColor, -25);
+        ansBanner.style.background = `linear-gradient(135deg, ${baseColor}, ${darkColor})`;
+        ansBanner.style.boxShadow = `0 4px 20px ${hexToRgba(baseColor, 0.55)}`;
+        ansBanner.style.color = isLightColor(baseColor) ? '#0f172a' : '#ffffff';
+      }
+
+      // 4. Tarjeta crece suavemente hacia abajo con el nombre
+      if (ansBox) {
+        ansBox.classList.add('show');
+      }
+
+      // 5. Confeti
+      triggerConfetti();
+
+      // 6. Audio 5: Revelación (Delay 0.35s)
+      playVoiceInstant(`q_${currentQuestionIdx + 1}_ansAudio`, 350);
+    }
+
+    /* PASO 4: SIGUIENTE O FIN */
+    function stepNextOrFinish() {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questionsTotal) {
+        stepGuess();
+      } else {
+        stepOutro();
+      }
+    }
+
+    /* PASO 5: OUTRO (Audio 6 con 0.175s delay) */
+    function stepOutro() {
+      stopAllVoices();
+      clearTimersAndShake();
+      clearConfetti();
+
+      renderStepWithTransition(() => {
+        const stage = document.getElementById('quiz-stage');
+        const outroText = document.getElementById('outro-text').value || '¿Cuántos puntos conseguiste en total? ¡Comenta tu puntuación y sígueme!';
+
+        stage.innerHTML = `
+          <div class="white-card">
+            <div class="pill-badge" style="background: linear-gradient(135deg, #00E676, #00b0ff); box-shadow: 0 4px 14px rgba(60, 255, 255, 0.45);">🏆 RESULTADOS FINALES 🏆</div>
+            <div class="welcome-title">${escapeHtml(outroText)}</div>
+          </div>
+        `;
+
+        playVoiceInstant('audio_outro', 160);
+      });
+    }
+
+    /* 8. REPRODUCTOR DE FONDO Y GRABACIÓN */
+    function setStageBackground(file) {
+      const videoEl = document.getElementById('bg-video-player');
+      const imgEl = document.getElementById('bg-img-player');
+
+      if (!file) {
+        videoEl.style.display = 'none';
+        imgEl.style.display = 'none';
+        return;
+      }
+
+      const isImg = file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.gif');
+      if (isImg) {
+        videoEl.pause();
+        videoEl.style.display = 'none';
+        imgEl.src = URL.createObjectURL(file);
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+        videoEl.src = URL.createObjectURL(file);
+        videoEl.style.display = 'block';
+        videoEl.play().catch(() => {});
+      }
+    }
+
+    async function enterRecordMode() {
+      getAudioContext();
+      setStageBackground(projectFiles.bgVideo);
+
+      for (let n = 1; n <= questionsTotal; n++) {
+        const q = projectFiles.questions[n - 1];
+        if (q.qAudio && !audioBufferCache[`q_${n}_qAudio`]) {
+          await preloadAudioToBuffer(`q_${n}_qAudio`, q.qAudio);
+        }
+        if (q.ansAudio && !audioBufferCache[`q_${n}_ansAudio`]) {
+          await preloadAudioToBuffer(`q_${n}_ansAudio`, q.ansAudio);
+        }
+      }
+
+      currentQuestionIdx = 0;
+      document.getElementById('record-screen').style.display = 'flex';
+      stepIntro();
+    }
+
+    function exitRecordMode() {
+      stopAllVoices();
+      clearTimersAndShake();
+      clearHookStickers(false);
+      clearConfetti();
+      document.getElementById('record-screen').style.display = 'none';
+      document.getElementById('bg-video-player').pause();
+    }
+
+    /* 9. MOTOR DE CONFETI */
+    let confettiAnimationId = null;
+    let confettiParticles = [];
+
+    function triggerConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      confettiParticles = [];
+
+      const colors = ['#00F0FF', '#FF007F', '#FFC400', '#00E676', '#ffffff', '#a78bfa'];
+      for (let i = 0; i < 45; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width,
+          y: -20,
+          w: 7 + Math.random() * 6,
+          h: 12 + Math.random() * 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: -1.5 + Math.random() * 3,
+          vy: 2.8 + Math.random() * 3.5,
+          rot: Math.random() * 360,
+          vRot: -5 + Math.random() * 10,
+          opacity: 1
+        });
+      }
+
+      cancelAnimationFrame(confettiAnimationId);
+      const start = performance.now();
+
+      function updateConfetti(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const elapsed = now - start;
+        let count = 0;
+
+        confettiParticles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vRot;
+          if (elapsed > 1800) p.opacity -= 0.025;
+
+          if (p.opacity > 0 && p.y < canvas.height + 20) {
+            count++;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          }
+        });
+
+        if (count > 0 && elapsed < 3200) {
+          confettiAnimationId = requestAnimationFrame(updateConfetti);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      confettiAnimationId = requestAnimationFrame(updateConfetti);
+    }
+
+    function clearConfetti() {
+      cancelAnimationFrame(confettiAnimationId);
+      const canvas = document.getElementById('confetti-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    /* 10. INDEXEDDB */
+    const DB_NAME = 'PixelGuessStudioDB_v4';
+    const STORE_PERMANENT = 'permanent_settings';
+    const STORE_AUTOSAVE = 'autosave_project';
+    const STORE_LIBRARY = 'library_projects';
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_PERMANENT)) db.createObjectStore(STORE_PERMANENT, { keyPath: 'key' });
+          if (!db.objectStoreNames.contains(STORE_AUTOSAVE)) db.createObjectStore(STORE_AUTOSAVE, { keyPath: 'id' });
+          if (!db.objectStoreNames.contains(STORE_LIBRARY)) db.createObjectStore(STORE_LIBRARY, { keyPath: 'id', autoIncrement: true });
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function savePermanentSetting(key, blobOrVal) {
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_PERMANENT, 'readwrite');
+        tx.objectStore(STORE_PERMANENT).put({ key, data: blobOrVal });
+      } catch(e){}
+    }
+
+    let autosaveDebounce = null;
+    function triggerProjectAutosave() {
+      clearTimeout(autosaveDebounce);
+      autosaveDebounce = setTimeout(executeAutosave, 500);
+    }
+
+    async function executeAutosave() {
+      try {
+        const db = await openDB();
+        const payload = {
+          id: 'active_draft',
+          questionsTotal,
+          introText: document.getElementById('intro-text').value,
+          outroText: document.getElementById('outro-text').value,
+          bgVideo: projectFiles.bgVideo,
+          questions: projectFiles.questions.slice(0, questionsTotal).map(q => ({
+            qText: q.qText,
+            ansText: q.ansText,
+            initialBlocks: q.initialBlocks || 22,
+            bannerColor: q.bannerColor || '#FF007F',
+            imgFile: q.imgFile,
+            qAudio: q.qAudio,
+            ansAudio: q.ansAudio
+          }))
+        };
+        const tx = db.transaction(STORE_AUTOSAVE, 'readwrite');
+        tx.objectStore(STORE_AUTOSAVE).put(payload);
+      } catch(e){}
+    }
+
+    async function loadStoredData() {
+      try {
+        const db = await openDB();
+
+        // 1. Permanentes
+        const txPerm = db.transaction(STORE_PERMANENT, 'readonly');
+        const reqPerm = txPerm.objectStore(STORE_PERMANENT).getAll();
+        reqPerm.onsuccess = async () => {
+          const rows = reqPerm.result || [];
+          for (const row of rows) {
+            if (row.key.startsWith('stk_blob_')) {
+              const idx = parseInt(row.key.replace('stk_blob_', ''));
+              persistentStickerBlobs[idx] = row.data;
+              const lbl = document.getElementById(`lbl-stk-${idx + 1}`);
+              if (lbl) {
+                lbl.textContent = `✓ Sticker ${idx + 1} Listo`;
+                lbl.classList.add('loaded');
+              }
+            } else if (persistentAudioKeys.includes(row.key) && row.data) {
+              await preloadAudioToBuffer(row.key, row.data);
+              const labelMap = {
+                'audio_intro': 'lbl-audio-intro',
+                'sfx_pop': 'lbl-sfx-pop',
+                'audio_timer_6s': 'lbl-audio-timer',
+                'audio_outro': 'lbl-audio-outro'
+              };
+              const lbl = document.getElementById(labelMap[row.key]);
+              if (lbl) {
+                lbl.textContent = `✓ Audio Guardado Disponible`;
+                lbl.classList.add('loaded');
+              }
+            }
+          }
+        };
+
+        // 2. Autoguardado
+        const txAuto = db.transaction(STORE_AUTOSAVE, 'readonly');
+        const reqAuto = txAuto.objectStore(STORE_AUTOSAVE).get('active_draft');
+        reqAuto.onsuccess = async () => {
+          const p = reqAuto.result;
+          if (p) {
+            if (p.introText !== undefined) document.getElementById('intro-text').value = p.introText;
+            if (p.outroText !== undefined) document.getElementById('outro-text').value = p.outroText;
+            if (p.questionsTotal) questionsTotal = p.questionsTotal;
+            if (p.bgVideo) {
+              projectFiles.bgVideo = p.bgVideo;
+              const lbl = document.getElementById('lbl-bg-video');
+              lbl.textContent = `✓ Fondo: ${p.bgVideo.name || 'Cargado'}`;
+              lbl.classList.add('loaded');
+            }
+            if (p.questions) {
+              for (let i = 0; i < p.questions.length; i++) {
+                const item = p.questions[i];
+                projectFiles.questions[i].qText = item.qText || '';
+                projectFiles.questions[i].ansText = item.ansText || '';
+                projectFiles.questions[i].initialBlocks = item.initialBlocks || (i === 0 ? 24 : (i === 1 ? 20 : 16));
+                projectFiles.questions[i].bannerColor = item.bannerColor || '#FF007F';
+                projectFiles.questions[i].imgFile = item.imgFile || null;
+                projectFiles.questions[i].qAudio = item.qAudio || null;
+                projectFiles.questions[i].ansAudio = item.ansAudio || null;
+
+                if (item.imgFile) {
+                  const img = new Image();
+                  img.onload = () => {
+                    projectFiles.questions[i].imgBitmap = img;
+                  };
+                  img.src = URL.createObjectURL(item.imgFile);
+                }
+              }
+            }
+          }
+          renderQuestionsSetupUI();
+        };
+      } catch(e) {
+        renderQuestionsSetupUI();
+      }
+    }
+
+    /* BIBLIOTECA */
+    async function saveCurrentProjectToLibrary() {
+      const q1 = projectFiles.questions[0].ansText || 'Pixel Guess';
+      const name = prompt('Nombre para guardar en la biblioteca:', `Adivina: ${q1}`);
+      if (!name) return;
+
+      const projectData = {
+        name,
+        date: new Date().toLocaleString(),
+        questionsTotal,
+        introText: document.getElementById('intro-text').value,
+        outroText: document.getElementById('outro-text').value,
+        bgVideo: projectFiles.bgVideo,
+        questions: projectFiles.questions.slice(0, questionsTotal).map(q => ({
+          qText: q.qText,
+          ansText: q.ansText,
+          initialBlocks: q.initialBlocks || 22,
+          bannerColor: q.bannerColor || '#FF007F',
+          imgFile: q.imgFile,
+          qAudio: q.qAudio,
+          ansAudio: q.ansAudio
+        }))
+      };
+
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_LIBRARY, 'readwrite');
+        tx.objectStore(STORE_LIBRARY).add(projectData);
+        tx.oncomplete = () => alert('✅ ¡Proyecto guardado en la biblioteca con éxito!');
+      } catch(e) {
+        alert('Error al guardar proyecto.');
+      }
+    }
+
+    function openLibraryModal() {
+      document.getElementById('library-modal').style.display = 'flex';
+      renderLibraryList();
+    }
+    function closeLibraryModal() {
+      document.getElementById('library-modal').style.display = 'none';
+    }
+
+    async function renderLibraryList() {
+      const container = document.getElementById('projects-list');
+      container.innerHTML = '<div style="text-align:center; padding:15px; color:#888;">Cargando proyectos...</div>';
+
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_LIBRARY, 'readonly');
+        const req = tx.objectStore(STORE_LIBRARY).getAll();
+
+        req.onsuccess = () => {
+          const list = req.result || [];
+          if (list.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#777;">No hay proyectos guardados.</div>';
+            return;
+          }
+          container.innerHTML = '';
+          list.reverse().forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'project-item';
+            div.innerHTML = `
+              <div class="project-info">
+                <h4>${escapeHtml(p.name)}</h4>
+                <span>📅 ${p.date} (${p.questionsTotal || 3} Preguntas)</span>
+              </div>
+              <div class="project-actions">
+                <button class="btn-proj-load" onclick="restoreProjectFromLibrary(${p.id})">Cargar</button>
+                <button class="btn-proj-del" onclick="deleteLibraryProject(${p.id})">✕</button>
+              </div>
+            `;
+            container.appendChild(div);
+          });
+        };
+      } catch(e) {
+        container.innerHTML = '<div style="text-align:center; padding:20px;">Error al cargar biblioteca.</div>';
+      }
+    }
+
+    async function restoreProjectFromLibrary(id) {
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_LIBRARY, 'readonly');
+        const req = tx.objectStore(STORE_LIBRARY).get(id);
+
+        req.onsuccess = async () => {
+          const p = req.result;
+          if (!p) return;
+
+          document.getElementById('intro-text').value = p.introText || '';
+          document.getElementById('outro-text').value = p.outroText || '';
+          questionsTotal = p.questionsTotal || 3;
+          projectFiles.bgVideo = p.bgVideo || null;
+
+          if (p.questions) {
+            for (let i = 0; i < p.questions.length; i++) {
+              const item = p.questions[i];
+              projectFiles.questions[i].qText = item.qText;
+              projectFiles.questions[i].ansText = item.ansText;
+              projectFiles.questions[i].initialBlocks = item.initialBlocks || (i === 0 ? 24 : (i === 1 ? 20 : 16));
+              projectFiles.questions[i].bannerColor = item.bannerColor || '#FF007F';
+              projectFiles.questions[i].imgFile = item.imgFile;
+              projectFiles.questions[i].qAudio = item.qAudio;
+              projectFiles.questions[i].ansAudio = item.ansAudio;
+
+              if (item.imgFile) {
+                const img = new Image();
+                img.onload = () => {
+                  projectFiles.questions[i].imgBitmap = img;
+                };
+                img.src = URL.createObjectURL(item.imgFile);
+              }
+            }
+          }
+
+          renderQuestionsSetupUI();
+          triggerProjectAutosave();
+          closeLibraryModal();
+          alert(`✅ Proyecto "${p.name}" restaurado.`);
+        };
+      } catch(e) {
+        alert('Error al restaurar proyecto.');
+      }
+    }
+
+    async function deleteLibraryProject(id) {
+      if (!confirm('¿Eliminar este proyecto de la biblioteca?')) return;
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_LIBRARY, 'readwrite');
+        tx.objectStore(STORE_LIBRARY).delete(id);
+        tx.oncomplete = () => renderLibraryList();
+      } catch(e){}
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[m]));
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStoredData();
+    });
+  </script>
+</body>
+</html>
